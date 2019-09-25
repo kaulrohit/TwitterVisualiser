@@ -1,8 +1,35 @@
 version: 2.1
 jobs:
   build:
+    machine: true
+    working_directory: ~/repo
     docker: 
       - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
     steps:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
+  deploy:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+              - "0b:37:d3:5a:e3:20:c5:cf:a2:b7:74:05:bf:9a:2b:26"
+      - run:
+          name: Deploy To Nectar Over SSH
+          # TODO: Add command copy repo files in appropriate locations to the server.
+          # This should probably be done through rsync on scp to ensure that diffs
+          # are calulated.
+          command: ssh ubuntu@43.240.97.137 "echo $(date) >> ci_test_log.txt"
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
