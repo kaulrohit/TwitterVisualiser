@@ -10,6 +10,7 @@ const nlpTrainingController   = require("../controllers/nlpTrainingController");
 const autoController          = require("../controllers/autoController");
 const tweetMapController      = require("../controllers/tweetMapController");
 const cacheController		  = require("../controllers/cacheController");
+const manualImageCheckingController = require("../controllers/manualImageCheckingController.js");
 
 // get homepage
 router.get('/', function(req, res) {
@@ -42,6 +43,9 @@ router.post('/auto', autoController.autoPost);
 router.get('/check', verifyController.getUncheckedTweets);
 router.post('/check/:id/:value/:geo', verifyController.checkTweets);
 router.post('/check/:id/:value/:location/:type/:geo', verifyController.checkTweets);
+
+router.get('/checkImage', manualImageCheckingController.getImages);
+router.post('/checkImage', manualImageCheckingController.updateImage);
 
 //new endpoints for NLP
 router.get('/nlpTraining/:count/checked/:checked', nlpTrainingController.returnNLPData);
