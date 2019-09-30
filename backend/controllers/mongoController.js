@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const tweet = require('../models/tweet_schema');
 const crime = require('../models/crime_schema');
+const image = require('../models/image_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 const connectionTimeout = 1500;
@@ -18,10 +19,12 @@ function init()
 	let tweetChicago = createDBConnectionObject(databaseChicago).model('tweets');
 	let chicagoCrime = createDBConnectionObject(databaseChicagoCrime).model('crime');
 	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
+	let images = createDBConnectionObject(databaseImages).model('images');
 
     module.exports.tweetMelb = tweetMelb;
     module.exports.tweetChicago = tweetChicago;
-    module.exports.chicagoCrime = chicagoCrime;
+	module.exports.chicagoCrime = chicagoCrime;
+	module.exports.images = images;
     module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
 }
 
@@ -30,7 +33,8 @@ function createDBConnectionObject(database) {
     let conn = mongoose.createConnection(database.url, { connectTimeoutMS: connectionTimeout, useNewUrlParser: true });
 
     conn.on('error', () => {
-        console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+		console.log("\nFailed to connect to the", database.type, database.location, "DB at", databaseMelb.url);
+				
         connectFailure();
     });
 
@@ -55,6 +59,14 @@ exports.getStoredTweets = async (location, query, count, skip) =>
 	}
 
 	return result;	
+}
+
+//Gets stored images based on parameters
+exports.getStoredImages = async (query, count, skip) =>
+{
+	let result = [];
+	await this.images.find(query).skip(skip).limit(parseInt(count)).lean().exec().then((res) => {result = res;});
+	return result;
 }
 
 //Pretty large function, handles storing tweets
