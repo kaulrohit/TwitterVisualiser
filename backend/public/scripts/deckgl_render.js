@@ -84,6 +84,26 @@ const deckgl = new deck.DeckGL({
 	...INITIAL_VIEW_STATE
 });
 
+//Updates tooltip for new data when hovered over by user.
+const updateIndicinaLayerTooltip = ({x, y, object}) => {
+	try {
+		const tooltip = document.querySelector("#tooltip");
+		if (object) {
+			tooltip.style.visibility = "visible";
+			tooltip.style.top = `${y}px`;
+			tooltip.style.left = `${x}px`;
+			tooltip.innerHTML = `
+				<div>Latitude: ${object.centroid[0]}</div>
+				<div>Longitude: ${object.centroid[0]}</div>`;
+		} else {
+			tooltip.innerHTML = "";
+			tooltip.style.visibility = "hidden";
+		}
+	} catch(e) {
+		console.log(e);
+	}
+};
+
 //Updates tool tips when user hovers over on deck.gl map
 const updateTrajectoryLayerTooltip = ({x, y, object}) => {
 	try {
@@ -427,6 +447,10 @@ renderLayers = (currentDate) => {
 		points: {},
 	};
 
+	let chiIndicinaOptions = {
+		points: {},
+	};
+
 	let chiTrajectOptions = {
 		points: {},
 		sameType: {},
@@ -447,18 +471,18 @@ renderLayers = (currentDate) => {
 	bothStatistics = document.querySelector("#statistics-both");
 
 
-	crimeTrajectoriesVisible = document.getElementById("trajectories-visble").checked ;
-	crimePointsVisble = document.getElementById("crimes-visble").checked;
-	centroidsVisble = document.getElementById("centroids-visble").checked;
-	tweetsVisble = document.getElementById("tweets-visble").checked;
+	crimeTrajectoriesVisible = document.getElementById("trajectories-Visible").checked ;
+	crimePointsVisible = document.getElementById("crimes-Visible").checked;
+	centroidsVisible = document.getElementById("centroids-Visible").checked;
+	tweetsVisible = document.getElementById("tweets-Visible").checked;
 
 	tweetDisplay = document.querySelector(".tweet-display"); 
 	crimeDisplay = document.querySelector(".crime-display"); 
 
 	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
 	
-	ATVisble = selectedTrajectoryValue == "all-trajectories" ? true : false;
-	STVisble = selectedTrajectoryValue == "same-trajectories" ? true : false;
+	ATVisible = selectedTrajectoryValue == "all-trajectories" ? true : false;
+	STVisible = selectedTrajectoryValue == "same-trajectories" ? true : false;
 
 
 	// set the new values into the options objects so we can feed them into the data layers
@@ -469,7 +493,7 @@ renderLayers = (currentDate) => {
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "none";
-			chiTweetOptions.points.visible = tweetsVisble;
+			chiTweetOptions.points.visible = tweetsVisible;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
@@ -482,11 +506,25 @@ renderLayers = (currentDate) => {
 			crimeDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
-			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
-			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
-			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
-			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
+			chiTrajectOptions.points.visible = crimePointsVisible;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
+			renderCrimeTypeLegend();
+			break;
+		case "machine-learning":
+			tweetDensityStatistics.style.display = "none";
+			tweetDisplay.style.display = "none";
+			crimeDisplay.style.display = "block";
+			crimeTrajectoriesStatistics.style.display = "block";
+			chiTweetOptions.points.visible = false;
+			chiTrajectOptions.points.visible = false;
+			chiIndicinaOptions.points.visible = true;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
 			renderCrimeTypeLegend();
 			break;
 		case "both":
@@ -494,12 +532,12 @@ renderLayers = (currentDate) => {
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "block";
-			chiTweetOptions.points.visible = tweetsVisble;
-			chiTrajectOptions.points.visible = crimePointsVisble;
-			chiTrajectOptions.sameType.visible = STVisble ? crimeTrajectoriesVisible: false;
-			chiTrajectOptions.allType.visible = ATVisble ? crimeTrajectoriesVisible : false;
-			chiCentroidOptions.sameType.visible = STVisble ? centroidsVisble: false;
-			chiCentroidOptions.allType.visible = ATVisble ? centroidsVisble : false;
+			chiTweetOptions.points.visible = tweetsVisible;
+			chiTrajectOptions.points.visible = crimePointsVisible;
+			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
+			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
+			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
+			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
 			renderCrimeTypeLegend();
 			break;
 		default:
@@ -531,6 +569,25 @@ renderLayers = (currentDate) => {
 		onHover: updateTweetLayerTooltip,
 		...chiTweetOptions.points,
 	});
+
+	const indicinaLayer = new deck.HexagonLayer({
+		id: "indicina-layer",
+		data: chiIndicinaData.points,
+		pickable: true,
+		colorRange: TWEET_COLOR_RANGE,
+		lightSettings: LIGHT_SETTINGS,
+		radius: 250,
+		elevationRange: [0, 800],
+		elevationScale: 4,
+		opacity: 0.6,
+		coverage: 0.9,
+		fp64: false,
+		z: 1,
+		extruded: false,
+		getPosition: d => d,
+		onHover: updateIndicinaLayerTooltip,
+		...chiIndicinaOptions.points,
+	});	
 	
 	var historicCrimeLayer = new deck.IconLayer({
 		id: "historic-crime-layer",
@@ -757,13 +814,3 @@ const setupInterface = () => {
 
 	setupTimeline();
 };
-
-/**
- * initialise everything
- */
-const runScript = () => {
-	setupInterface();
-	initialiseData();
-}
-
-runScript();
