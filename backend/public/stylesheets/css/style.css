@@ -160,7 +160,10 @@ h1:not(#map h1) {
 
 #toggle-panels
 {
-   position: absolute;
+   position: fixed;
+   bottom: 0.5rem;
+   left: 50%;
+   background: rgba(0, 0, 0, 0.3);
 }
 
 /* large desktop devices */
