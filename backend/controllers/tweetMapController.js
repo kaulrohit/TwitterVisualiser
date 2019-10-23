@@ -5,7 +5,7 @@ const chicagoDataFactory = require('./chicagoDataFactory');
 const moment = require('moment')
 
 exports.getMlMapData = function(req, res) {
-    viscrime.find().lean().exec()
+    viscrime.find({ "caption": { "$not": /^NoCrime/  } }).lean().exec()
     .then(viscrime => {
         var features = [];
         viscrime.forEach(function(element) {
