@@ -40,6 +40,10 @@ let chiTweetData = {
 	points: null,
 };
 
+let chiMlData = {
+	points: null,
+};
+
 let chiTrajectoryData = {
 	points: null,
 	sameType: null,
@@ -85,8 +89,8 @@ const deckgl = new deck.DeckGL({
 });
 
 //Updates tooltip for new data when hovered over by user.
-const updateIndicinaLayerTooltip = ({x, y, object}) => {
-	try {
+const updateMlLayerTooltip = ({x, y, object}) => {
+	/*try {
 		const tooltip = document.querySelector("#tooltip");
 		if (object) {
 			tooltip.style.visibility = "visible";
@@ -101,7 +105,7 @@ const updateIndicinaLayerTooltip = ({x, y, object}) => {
 		}
 	} catch(e) {
 		console.log(e);
-	}
+	}*/
 };
 
 //Updates tool tips when user hovers over on deck.gl map
@@ -447,7 +451,7 @@ renderLayers = (currentDate) => {
 		points: {},
 	};
 
-	let chiIndicinaOptions = {
+	let chiMlOptions = {
 		points: {},
 	};
 
@@ -514,18 +518,17 @@ renderLayers = (currentDate) => {
 			renderCrimeTypeLegend();
 			break;
 		case "machine-learning":
-			tweetDensityStatistics.style.display = "none";
+			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "none";
-			crimeDisplay.style.display = "block";
-			crimeTrajectoriesStatistics.style.display = "block";
+			crimeDisplay.style.display = "none";
+			crimeTrajectoriesStatistics.style.display = "none";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
-			chiIndicinaOptions.points.visible = true;
+			chiMlOptions.points.visible = true;
 			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
 			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
 			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
 			chiCentroidOptions.allType.visible = ATVisible ? centroidsVisible : false;
-			renderCrimeTypeLegend();
 			break;
 		case "both":
 			tweetDensityStatistics.style.display = "block";
@@ -570,9 +573,9 @@ renderLayers = (currentDate) => {
 		...chiTweetOptions.points,
 	});
 
-	const indicinaLayer = new deck.HexagonLayer({
-		id: "indicina-layer",
-		data: chiIndicinaData.points,
+	const mlLayer = new deck.HexagonLayer({
+		id: "ml-layer",
+		data: chiMlData.points,
 		pickable: true,
 		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
@@ -585,8 +588,8 @@ renderLayers = (currentDate) => {
 		z: 1,
 		extruded: false,
 		getPosition: d => d,
-		onHover: updateIndicinaLayerTooltip,
-		...chiIndicinaOptions.points,
+		onHover: updateMlLayerTooltip,
+		...chiMlOptions.points,
 	});	
 	
 	var historicCrimeLayer = new deck.IconLayer({
@@ -708,8 +711,7 @@ renderLayers = (currentDate) => {
 
 	// add the data layers to the main deckgl object
 	deckgl.setProps({
-		layers: [tweetLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
-		// layers: [tweetLayer],
+		layers: [tweetLayer, mlLayer, historicCrimeLayer, historicTrajectorySTLayer, historicCentroidSTLayer, historicTrajectoryATLayer, historicCentroidATLayer],
 	});
 };
 
@@ -750,23 +752,46 @@ const loadData = (data, mode) => {
 		// array of dates represented in crimesByDate
 		dataDateRange = Object.keys(crimesByDate);
 	} catch(e) {
-		console.log("Error: Could not load data");
+		console.log("Error: Could not load data: " + e);
 	};
 };
+
+const loadMlData = (data) => {
+	try {
+		chiMlData.points = data.data.map(feature => (
+			feature.geometry.coordinates
+		));
+		console.log(chiMlData);
+		
+	} catch (e) {
+		console.log(e);
+	}
+}
 
 /**
  * Initialise the global data variables by fetching data from the endpoints
  * specified in DATA_URL. Called once only.
  */
 const initialiseData = async() => {
+	console.log("Loading data...");
+	
+	await fetch('/mlmap')
+    .then(res => res.json())
+	.then(data => loadMlData(data))
+	.then(console.log("ML Map data loaded."))
+	.catch((e) => console.log("Error in loading ML data. " + e));
+	
 	await fetch(DATA_URL.CHI_TRAJECTORY)
 	.then(res => res.json())
 	.then(data => loadData(data, "default"))
-	.catch(() => console.log("Error in loading data."));
+	.then(console.log("Chicago trajectory data loaded."))
+	.catch(() => console.log("Error in loading Chicago trajectory data."));
+
 
 	// statsBuilder();
 	renderLayers();
 };
+
 
 /**
  * Initialise the interactive JS components
@@ -814,3 +839,12 @@ const setupInterface = () => {
 
 	setupTimeline();
 };
+
+const runScript = () => {
+    console.log("Setting up DeckGL...");
+    
+	setupInterface();
+	initialiseData();
+}
+
+runScript();
