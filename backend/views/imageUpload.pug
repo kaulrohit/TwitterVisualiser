@@ -14,9 +14,9 @@ block content
 					p Your input will aid the NLP model in learning how to recognise images.	
 			.row
 				.col.s6
-						form(action='/uploadImage' method='POST')
+						form(action='/uploadImage' method='POST' enctype="multipart/form-data")
 							p
-								input(type="file", name="file")
+								input(type="file", name="file", accept="image/jpeg,image/png")
 							h6 Type of Crime
 							p
 								label
