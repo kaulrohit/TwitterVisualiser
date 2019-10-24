@@ -3,8 +3,23 @@ exports.getForm = function(req, res){
 }
 
 exports.uploadImage = function(req, res){
-	console.log(req.body.crimes.reduce((acc, val) => acc + parseInt(val), 0));
+	console.log(req.body.crimes.map(num =>{
+		return kvCrimes[num]
+	}));
 	// Add data to database
 	// We don't have a production DB yet
-	res.redirect('/checkImage');
+	res.redirect('/uploadImage');
+}
+
+const kvCrimes = {
+	1: "NoCrime",
+	2: "Assault",
+	4: "Theft",
+	8: "Gun",
+	16: "Drugs",
+	32: "Property Damage",
+	64: "Homicide",
+	128: "Vehicular",
+	256: "Sex Offence",
+	512: "Hostage"
 }
