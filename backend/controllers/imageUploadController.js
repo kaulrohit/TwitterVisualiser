@@ -1,14 +1,29 @@
+var fs = require("fs");
+var mime = require("mime-types");
+
 exports.getForm = function(req, res){
 	res.render('imageUpload');
 }
 
 exports.uploadImage = function(req, res){
-	console.log(req.body.crimes.map(num =>{
-		return kvCrimes[num]
-	}));
+	//console.log(req.body.crimes.map(num =>{
+	//	return kvCrimes[num]
+	//}));
 	// Add data to database
 	// We don't have a production DB yet
-	console.log(req.body.file)
+	var file = req.files.file;
+	var path = `storage/taggedImages/${req.body.crimes.reduce((acc, val) => acc + parseInt(val), 0)}.${file.md5}.${mime.extension(file.mimetype)}`
+	if (!(file.mimetype == "image/jpeg" || file.mimetype == "image/png")) {
+		res.send({ error: "Error: incorrect file type" });
+	}
+	file.mv(path, function(err) {
+		if (err) {
+			return res.status(500).send(err);
+		}
+		console.log("Image moved to " + path);
+	});
+
+
 	res.redirect('/uploadImage');
 }
 
