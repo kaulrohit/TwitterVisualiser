@@ -16,9 +16,7 @@ block content
 				.col.s6
 						form(action='/uploadImage' method='POST')
 							p
-								label
-									input(type="file", name="file")
-									span File
+								input(type="file", name="file")
 							h6 Type of Crime
 							p
 								label
@@ -63,5 +61,5 @@ block content
 									span Hostage
 							button.btn.waves-effect.waves-light.green(action="submit") SUBMIT
 				.col-sm-6
-					img#imageDisplay.img-fluid(hidden=true)
+					img#imageDisplay.img-fluid(hidden=true, style="max-width:300px")
 	script(type="text/javascript" src="./scripts/imageUpload.js")

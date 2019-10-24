@@ -1,5 +1,5 @@
 exports.getForm = function(req, res){
-	res.render('imageUpload', {image: undefined});
+	res.render('imageUpload');
 }
 
 exports.uploadImage = function(req, res){
@@ -8,6 +8,7 @@ exports.uploadImage = function(req, res){
 	}));
 	// Add data to database
 	// We don't have a production DB yet
+	console.log(req.body.file)
 	res.redirect('/uploadImage');
 }
 
