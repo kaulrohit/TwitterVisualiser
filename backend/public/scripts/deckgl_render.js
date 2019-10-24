@@ -488,9 +488,11 @@ renderLayers = (currentDate) => {
 	crimePointsVisible = document.getElementById("crimes-Visible").checked;
 	centroidsVisible = document.getElementById("centroids-Visible").checked;
 	tweetsVisible = document.getElementById("tweets-Visible").checked;
+	mlVisible = document.getElementById("ml-Visible").checked;
 
 	tweetDisplay = document.querySelector(".tweet-display"); 
 	crimeDisplay = document.querySelector(".crime-display"); 
+	mlDisplay = document.querySelector(".ml-display");
 
 	selectedTrajectoryValue = document.querySelector("input[name='trajectory-crime-type']:checked").value;
 	
@@ -505,8 +507,10 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "none";
 			crimeTrajectoriesStatistics.style.display = "none";
 			chiTweetOptions.points.visible = tweetsVisible;
+			chiMlOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
 			chiTrajectOptions.sameType.visible = false;
 			chiTrajectOptions.allType.visible = false;
@@ -517,6 +521,8 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "none";
 			tweetDisplay.style.display = "none";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = crimePointsVisible;
@@ -530,10 +536,11 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "none";
 			crimeDisplay.style.display = "none";
+			mlDisplay.style.display = "block";
 			crimeTrajectoriesStatistics.style.display = "none";
 			chiTweetOptions.points.visible = false;
 			chiTrajectOptions.points.visible = false;
-			chiMlOptions.points.visible = true;
+			chiMlOptions.points.visible = mlVisible;
 			chiTrajectOptions.sameType.visible = STVisible ? crimeTrajectoriesVisible: false;
 			chiTrajectOptions.allType.visible = ATVisible ? crimeTrajectoriesVisible : false;
 			chiCentroidOptions.sameType.visible = STVisible ? centroidsVisible: false;
@@ -543,6 +550,8 @@ renderLayers = (currentDate) => {
 			tweetDensityStatistics.style.display = "block";
 			tweetDisplay.style.display = "block";
 			crimeDisplay.style.display = "block";
+			mlDisplay.style.display = "none";
+			chiMlOptions.points.visible = false;
 			crimeTrajectoriesStatistics.style.display = "block";
 			chiTweetOptions.points.visible = tweetsVisible;
 			chiTrajectOptions.points.visible = crimePointsVisible;
@@ -586,6 +595,7 @@ renderLayers = (currentDate) => {
 		id: "ml-layer",
 		data: chiMlData.points,
 		pickable: true,
+		colorRange: TWEET_COLOR_RANGE,
 		lightSettings: LIGHT_SETTINGS,
 		radius: 150,
 		elevationRange: [0, 800],
@@ -833,6 +843,8 @@ const setupInterface = () => {
 					crimeTrajectoriesMenu.style.display = "block";
 					break;
 				default:
+					tweetDensityMenu.style.display = "block";
+					crimeTrajectoriesMenu.style.display = "none";	
 					break;
 			}
 		});
