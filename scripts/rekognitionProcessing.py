@@ -40,11 +40,11 @@ if __name__ == "__main__":
 	db_conn = connect_to_db(MONGO_URI)
 
 	for file in os.listdir(directory):
-		sha256 = getSha(file)
 		filename = os.fsdecode(file)
-		newFilename = "{}.{}".format(sha256, os.path.splitext(filename)[1])
 		if filename.endswith(".jpg") or filename.endswith(".png"):
 			imageFile=str(os.path.join(directory, filename))
+			sha256 = getSha(imageFile)
+			newFilename = "{}{}".format(sha256, os.path.splitext(filename)[1])
 			client=boto3.client(
 				'rekognition',
 				aws_access_key_id=AWS_KEY_ID,
@@ -62,13 +62,13 @@ if __name__ == "__main__":
 
 				for label in response['Labels']:
 					img_obj["lables_with_confidence"][label['Name']] = label['Confidence']
-					# myfile.write('\n"'+label['Name'] + '" : ' + str(label['Confidence']))
 
+				print(img_obj)
 				result=db_conn.object_tags.insert(img_obj)
-				print(result)
 				# move tagged to new folder
-				#os.rename(str(directory+filename), str(IMAGE_OUTPUT_PATH+filename))
-				os.rename(os.path.join(directory, filename), os.path.join(IMAGE_OUTPUT_PATH, newFilename))
+				os.rename(imageFile, os.path.join(IMAGE_OUTPUT_PATH, newFilename))
 
 			except:
 				print("Error occured with file: " + filename)
+				import traceback
+				traceback.print_exc()
