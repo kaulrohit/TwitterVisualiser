@@ -3,6 +3,7 @@ import boto3, os, json, sys, hashlib, enum
 
 # VARIABLES
 MONGO_URI = "localhost:27017"
+MONGO_COLLECTION = "rekognition"
 AWS_KEY_ID = ""
 AWS_ACCESS_KEY = ""
 AWS_REGION = "ap-southeast-2"
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 					img_obj["lables_with_confidence"][label['Name']] = label['Confidence']
 
 				print(img_obj)
-				result=db_conn.object_tags.insert(img_obj)
+				result=db_conn[MONGO_COLLECTION].insert(img_obj)
 				# move tagged to new folder
 				os.rename(imageFile, os.path.join(IMAGE_OUTPUT_PATH, newFilename))
 
