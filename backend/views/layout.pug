@@ -30,11 +30,15 @@ html
       li
         a(href='/check') Manual Checking
     nav.grey.darken-4(role="navigation")
-      .nav-wrapper.container
-        a#logo-container.brand-logo(href="/") VisCrime
+      .nav-wrapper
+        a#logo-container.brand-logo(href="/" style="padding-left:5rem;") VisCrime
         a.sidenav-trigger(href="#" data-target="mobile-menu")
           i.fas.fa-bars
         ul.right.hide-on-med-and-down
+          li
+            a.valign-wrapper(href="/about")
+              i.fas.fa-info(style="padding-right:1rem;")
+              span About 
           li
             a.valign-wrapper(href="/deckmap")
               i.fas.fa-map-marker-alt.viscrime-navicon
@@ -66,13 +70,25 @@ html
           i.fas.fa-map-marker-alt.viscrime-navicon
           span Explore 
       li
+        a.valign-wrapper(href="/about")
+          i.fas.fa-info
+          span About 
+      li
+        a.valign-wrapper(href="/scan")
+          i.fas.fa-brain.viscrime-navicon
+          span Predict
+      li
         a.valign-wrapper(href="/lookup/api")
           i.fas.fa-search.viscrime-navicon
           span Tweet Lookup  
       li
         a.valign-wrapper(href="/imagesearch")
           i.fas.fa-search-plus.viscrime-navicon
-          span Search Crime Images  
+          span Search Crime Images 
+      li
+        a.valign-wrapper(href="/visualisations")
+          i.fas.fa-chart-bar
+          span Visualisations  
       li
         a.dropdown-trigger-sidenav.valign-wrapper(href='#' data-target='dropdown2')
           i.fas.fa-cog.viscrime-navicon
