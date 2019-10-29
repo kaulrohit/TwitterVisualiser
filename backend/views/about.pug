@@ -2,43 +2,28 @@
 extends layout
 
 append head
-	title VisCrime
+	title VisCrime - About our work
 
 block content
 	.container
 		.section
 			.row.valign-wrapper
 				.col.s12.m8.l8
-					h5 Making Sense of Social Media
-					p First, we need some data to work with. One of the sources that we use is a dataset of tweets that we compile and aggregate. The VisCrime system periodically pulls real tweets from the public Twitter API, fetching only tweets related to topics based on a set of dynamic keywords related to crime. This way, we're able to achieve maximum coverage of all the tweets relevant to us. 
-					p The next step is to figure out which of the tweets we pulled are actually meaningful - is a tweet talking about a crime happening down the street, or is it just talking about the user's favourite crime movie? To solve this we use Natural Language Processing techniques - or NLP - and train it on a massive set of tweets to determine if the tweets should continue onwards to the next procedures - generating trajectories. 
-				.col.s12.m4.l4.center-align
-					img.responsive-img(src="stylesheets/img/twitter.png") 
+					h5 Image Classification
+                    p Part of our work was to manually annotate and classify the images that we had
 			.divider
 			.row.valign-wrapper
 				.col.s12.m8.l8
-					h5 Visualising Movement 
-					p Plotting the data we have on a map as a simple set of points is fine and all, but what we really want to do is to investigate the relationship between these points and construct a sort of 'trajectory' that tracks the movement of crime across time and space. 
-					p We take multiple factors into account to help us establish relationships; spatial and temporal distances, the type of crime and even the nature of the environment in which the crime has occured.
-					p We do this process on our whole data set and contain it within an interactive map for you to play around with and get insights from.
-				.col.s12.m4.l4.center-align
-					img.responsive-img(src="stylesheets/img/network.png")
+					h5 Deep Learning 
+                    p As part of the work we've done
 			.divider
 			.row.valign-wrapper
 				.col.s12.m8.l8
-					h5 Finding Crimes from Images 
-					p In addition to getting crimes from databases, we also want to dynamically find crimes from Twitter and other sites. 
-					p This means that instead of having to feed data in to the application manually we can simply take the images automatically.
-					p After we've obtained the images, we use them as data for Amazon Rekognition to find tags. Then we use a trained hybrid model to make use of this data along with manually annotated captions to determine whether or not crimes are appearing in images, along with crime severity.
-				.col.s12.m4.l4.center-align
-					img.responsive-img(src="stylesheets/img/rekognition.png" width="128" height="128")
+					h5 Social Media Scraping 
+                    p We have used a script to 
 			.divider
 			.row.valign-wrapper
 				.col.s12.m8.l8
-					h5 Cutting-Edge Technologies
-					p To achieve everything we're doing, the team makes use of a whole slew of cutting-edge, modern software technologies.
-					p The main powerhouse running the whole show is our backend system. This is where we run our scripts for communicating with the public Twitter API, processing this data and turning this data into meaningful trajectories. We store everything in a NoSQL MongoDB instance. To handle NLP, we use the spaCy javascript library which specialises in creating rich models of the English language.
-					p To provide meaningful insights, we plot our data on an interactive map powered by deck.gl - a robust WebGL-based visualisation framework that renders highly performant geospatial data layers.
-				.col.s12.m4.l4.center-align
-					img.responsive-img(src="stylesheets/img/node.png")
+					h5 Image Locations
+					p The image locations we are using are mocked up.
 			.divider
