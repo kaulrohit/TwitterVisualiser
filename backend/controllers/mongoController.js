@@ -5,9 +5,9 @@ const viscrime = require('../models/viscrime_schema');
 const ObjectId = require('mongodb').ObjectId;
 const spawn = require('threads').spawn;
 const connectionTimeout = 1500;
-const databaseMelb = {location: "Melbourne", url : "mongodb://team:swinburne@43.240.97.166/tweets", type: "Production"};
-const databaseChicago = {location: "Chicago", url : "mongodb://team:swinburne@43.240.97.166/tweetsChicago", type: "Production"};
-const databaseChicagoCrime = {location:"Chicago Crime", url : "mongodb://team:swinburne@43.240.97.166/chicagoCrime", type: "Production"};
+const databaseMelb = {location: "Melbourne", url : process.env.MELBOURNE_DATABASE_LOCATION, type: "Production"};
+const databaseChicago = {location: "Chicago", url : process.env.CHICAGO_DATABASE_LOCATION, type: "Production"};
+const databaseChicagoCrime = {location:"Chicago Crime", url : process.env.CHICAGO_CRIME_DATABASE_LOCATION, type: "Production"};
 const databaseViscrime = {location: "Viscrime", url : process.env.IMAGE_DATABASE_LOCATION, type: "Production"}
 const connectFailure = function() {console.log("This will abort the NodeJS process."); process.exit(1);}
 
@@ -22,8 +22,8 @@ function init()
 	let chicagoCrimeTrajectory = createDBConnectionObject(databaseChicagoCrime).model('crime');
 	let viscrime = createDBConnectionObject(databaseViscrime).model('viscrime');
 
-    module.exports.tweetMelb = tweetMelb;
-    module.exports.tweetChicago = tweetChicago;
+  	module.exports.tweetMelb = tweetMelb;
+	module.exports.tweetChicago = tweetChicago;
 	module.exports.chicagoCrime = chicagoCrime;
 	module.exports.viscrime = viscrime;
     module.exports.chicagoCrimeTrajectory = chicagoCrimeTrajectory; //trajectory calculation queries get their own connection obj
