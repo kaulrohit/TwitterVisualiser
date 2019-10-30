@@ -1,0 +1,65 @@
+//-Verify page to check each Tweet.
+//-Used to train NLP
+extends layout
+
+append head
+	title VisCrime - Config
+
+block content
+	.container
+		.section
+			.row
+				.col.s12
+					h4 Image Upload
+					p Your input will aid the NLP model in learning how to recognise images.	
+			.row
+				.col.s6
+						form(action='/uploadImage' method='POST' enctype="multipart/form-data")
+							p
+								input(type="file", name="file", accept="image/jpeg,image/png")
+							h6 Type of Crime
+							p
+								label
+									
+									input(name='crimes', type='checkbox', value='1')
+									span NoCrime
+							p
+								label
+									input(name='crimes', type='checkbox', value='2')
+									span Assault
+							p
+								label
+									input(name='crimes', type='checkbox', value='4')
+									span Theft
+							p
+								label
+									input(name='crimes', type='checkbox', value='8')
+									span Gun
+							p
+								label
+									input(name='crimes', type='checkbox', value='16')
+									span Drugs
+							p
+								label
+									input(name='crimes', type='checkbox', value='32')
+									span Property Damage
+							p
+								label
+									input(name='crimes', type='checkbox', value='64')
+									span Homicide
+							p
+								label
+									input(name='crimes', type='checkbox', value='128')
+									span Vehicular
+							p
+								label
+									input(name='crimes', type='checkbox', value='256')
+									span Sex Offence
+							p
+								label
+									input(name='crimes', type='checkbox', value='512')
+									span Hostage
+							button.btn.waves-effect.waves-light.green(action="submit") SUBMIT
+				.col-sm-6
+					img#imageDisplay.img-fluid(hidden=true, style="max-width:300px")
+	script(type="text/javascript" src="./scripts/imageUpload.js")
