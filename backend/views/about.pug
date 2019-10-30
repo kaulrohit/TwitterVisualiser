@@ -1,0 +1,93 @@
+//-Home page with relevant information about the group and project.
+extends layout
+
+append head
+	title VisCrime
+
+block content
+	#index-banner.section.grey.darken-4
+		.container
+			.section
+				.row.valign-wrapper
+					.col.s12.m6.l6
+						h5.white-text Crime visualisation using geographical locations, and crime prediction using machine learning.
+						p.white-text Developed for the Final-Year Software Engineering Project at Swinburne University of Technology
+						
+							
+					.col.s12.m6.l6
+						.video-container
+							iframe(width="560" height="315" src="https://www.youtube.com/embed/u9cRITQeOSQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen)
+	.container
+		.section
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Map Visualisation
+					p The purpose of the visualisation map is to show to end users the data that we have gathered and processed. 
+					p The data is shown as a hexagon map extruded into three-dimensional space. The third dimension represents the number of crimes occurring within the area. 
+					p When a column is hovered over it will show the location, number of crimes images, each crime image and its intensity.
+					.row
+						input-field.col.s12
+							a(href="/deckmap")
+								button.btn.waves-effect.waves-light Open Map
+					.row
+						input-field.col.s12
+							a(href="/visualisations")
+								button.btn.waves-effect.waves-light Open Visualisations
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/vis_map.PNG") 
+			.divider
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Classify Bot 
+					p Classifybot was a software developed to assist in the task of classifying images with tags. The solution was to be hosted on a single centralised web server so that all requests are handled the same, ensuring data consistency between all the team members.
+					p To serve images for each individual member to tag using a predefined set of tags. Providing a simple interface to increase the efficiency of the user to be able to tag a large set of images while avoiding hassles.
+					p We have also adopted the same webui to use a NodeJS backend, and has been implemented into the Viscrime website as the ‘Upload Image’ function.
+
+					.row
+						input-field.col.s12
+							a(href="/uploadImage")
+								button.btn.waves-effect.waves-light Open ClassifyBot
+					.row
+						input-field.col.s12
+							a(href="/imagesearch")
+								button.btn.waves-effect.waves-light Open Image Result Search	
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/classifybot.PNG")
+			.divider
+			.row.valign-wrapper
+				.col.s12.m8.l8
+					h5 Crime Prediction - AI model
+					p This AI model is a combination of 3 different models, used to predict if a given image contains crime or not and classify if according to its severity.
+					p This means that instead of having to feed data in to the application manually we can simply take the images automatically.
+					p The model was trained using a combination of Long short-term memory (LSTM), Term frequency–inverse document frequency (TF-IDF) with multi-class classifiers and Deep Convolutional Neural Network (DCNN) using resnet50 and resent18. 
+					p It was trained on image captions, the objects in those images (using AWS rekognition) and the images themselves.
+					.row
+						input-field.col.s12
+							a(href="/scan")
+								button.btn.waves-effect.waves-light Open Crime Prediction
+
+				.col.s12.m4.l4.center-align
+					img.responsive-img(src="stylesheets/img/prediction.PNG" )
+			.divider
+	.container
+		.section
+			.row.valign-wrapper
+				.col.s12.m12.l12.center-align
+					h4 Meet the Team
+			.row
+				.col.s6.m4.l3.center-align
+					h6 Joe Gibbs
+					img.circle(src="stylesheets/img/joe.jpg" width="160" height="160")
+					p Team Leader
+				.col.s6.m4.l3.center-align
+					h6 Dumindu Madithiyagasthenna
+					img.circle(src="stylesheets/img/dumi.jpg" width="160" height="160")
+					p Frontend Lead			
+				.col.s6.m4.l3.center-align
+					h6 Rohit Kaul
+					img.circle(src="stylesheets/img/rohit.jpg" width="160" height="160")
+					p Machine Learning Lead						
+				.col.s6.m4.l3.center-align
+					h6 Richard Alysandratos
+					img.circle(src="stylesheets/img/richard.jpg" width="160" height="160")
+					p Development and Backend Lead
