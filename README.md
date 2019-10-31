@@ -29,44 +29,54 @@ choco install nodejs -y
 brew install node
 ```
 
-The system also uses `pip` and `pipenv` to manage python package packages
+The system also uses `pip` to manage python package packages
 
 If you installed python from python.org you should have pip by default if not,
 see https://pip.pypa.io/en/stable/installing/ for an installation guide.
 
-To install pipenv input the following command 
-```
-pip install --user pipenv
-```
 
-Or, If you have homebew or linuxbrew you can just use 
-```
-brew install pipenv
-```
-
-Once you have both nodejs and pipenv, you can install the required packages for the project by doing the following:
+Once you have both nodejs and pip, you can install the required packages for the project by doing the following:
 
 For node packages, run this in the directory with package.json: 
 ```
 npm install 
 ```
 
-For python packages, run this in the root directory of the project:
+For python packages, run this in the `backend` directory:
+
 ```
-pipenv install
+pip install -r requirements.txt
 ```
 
-Using pipenv will require you to run the associated python scripts that contain libraries with `pipenv run`
+Or if you are on windows:
 
-## Opening (Backend)
+```
+pip install -r requirements_windows.txt
+```
 
-The VisCrime backend forms the main part of VisCrime, which hosts the web app, DeckGL visualisation map and handles storing, retrieving and processing data from the MongoDB database. 
+Also note that if you wish to run the AWS rekognition processing script you''ll need to run the following in the `scripts` directory
 
-1. To install dependencies for the backend, run the `npm install` command in the backend folder.
-2. If you're making changes, please make sure `mongoController` isn't writing to our production MongoDB on Nectar:
-`const url = 'mongodb://team:swinburne@43.240.97.166/tweets';`
+```
+pip install -r rekognition-requirement.txt
+```
 
 ## Running the application
+
+To run the application you must set up the a `variables.env` file in the backend directory, simply create the file and ensure the following 
+variables are configured:
+
+TWITTER_CONSUMER_KEY=xxxx
+TWITTER_CONSUMER_SECRET=xxxx
+TWITTER_ACCESS_TOKEN_KEY=xxxx
+TWITTER_ACCESS_TOKEN_SECRET=xxx
+WORDSAPIKEY=xxxx
+GOOGLE_PLACES_API=xxxx
+CHICAGO_TOKEN=xxxx
+CHICAGO_SECRET=xxxx
+IMAGE_DATABASE_LOCATION=mongodb://xxxx:xxxx@xxxx:xxxx/viscrime
+MELBOURNE_DATABASE_LOCATION=mongodb://team:swinburne@136.186.108.40/tweets
+CHICAGO_DATABASE_LOCATION=mongodb://team:swinburne@136.186.108.40/tweetsChicago
+CHICAGO_CRIME_DATABASE_LOCATION=mongodb://team:swinburne@136.186.108.40/chicagoCrime
 
 To now run the application we can simply do an `npm start` command in the backend folder and it will fire up locally on port `3000`.
 
@@ -90,4 +100,4 @@ Instead of running the application with the production databases used to hold tw
 - mongodb://team:swinburne@43.240.97.166/chicagoCrime
 
 From here you can access the databases using the command line. To copy these to your database, use
-`mongodump --uri="mongodb://mongodb0.example.com:27017"` from your PC (not the mongo shell), where the string is one of the above mongoDB locations. This will generate a dump file for you, which you can then use with the `mongorestore` command to add to your local database. From there, get the credentials for your databases and add them to the variables.env file in the backend. You won't be able to add the images database because that would also require that you move all the images to your own computer.
+`mongodump --uri="mongodb://mongodb0.example.com:27017"` from your PC (not the mongo shell), where the string is one of the above mongoDB locations. This will generate a dump file for you, which you can then use with the `mongorestore` command to add to your local database. From there, get the credentials for your databases and add them to the `variables.env` file in the backend. You won't be able to add the exact sane images database that we use on production since you'd need the same images, however you can run our own image database provided you set it up with the same schema. There is a mongo database dump for the viscrime db in the `dbdumps` directory.
