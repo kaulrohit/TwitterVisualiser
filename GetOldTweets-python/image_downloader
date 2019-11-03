@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+import urllib.request
+import pandas as pd 
+import os
+import argparse
+
+def download_images(filename):
+	csv_file = pd.read_csv(filename, sep=';;')
+	imageurls = csv_file['imageurl']
+
+	dirName = filename.split('.')[0]
+
+	if not os.path.exists(dirName):
+		os.mkdir(dirName)
+
+	i = 1
+	a=[]
+	for imageurl in imageurls:
+		if imageurl != 'None':
+			print(imageurl)
+			print(imageurl.split('/')[-1])
+			try:
+				urllib.request.urlretrieve(imageurl, "{}/{}".format(dirName,imageurl.split('/')[-1]))
+			except:
+				pass
+
+def main():
+	parser = argparse.ArgumentParser(description='image downloading')
+	parser.add_argument("-f", type=str, action='store', dest='filename', default="7NewsAustralia.csv", help="local path of csv files")
+
+	results = parser.parse_args()
+	filename = results.filename
+
+	download_images(filename)
+
+if __name__ == "__main__":
+	main()
+
+
